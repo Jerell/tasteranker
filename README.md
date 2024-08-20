@@ -10,6 +10,8 @@ Rating things 1-5 usually ends up as a binary good/bad anyway
 
 `./watch.sh` will watch for changes
 
+Uses [bun](https://bun.sh)
+
 ### Go server
 
 `air` will run main.go and watch for changes
