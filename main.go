@@ -36,9 +36,13 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func main() {
     e := echo.New()
 
-    err := godotenv.Load()
-    if err != nil {
-        e.Logger.Fatal("Error loading .env file")
+    env := os.Getenv("APP_ENV")
+
+    if env == "development" {
+        err := godotenv.Load()
+        if err != nil {
+            e.Logger.Fatal("Error loading .env file")
+        }
     }
 
     port := os.Getenv("PORT")
@@ -67,7 +71,6 @@ func main() {
         return c.Render(http.StatusOK, "hello.html", data)
     })
 
-    env := os.Getenv("APP_ENV")
 
     if env == "development" {
         e.Static("/assets", "./assets")
