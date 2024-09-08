@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"io"
+    "os"
 	"net/http"
     "embed"
 
@@ -24,6 +25,11 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 func main() {
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+
     e := echo.New()
 
     t := &Template{
@@ -53,8 +59,8 @@ func main() {
     println(2020202002)
     htmlcontent.UseSubroute(htmlGroup)
 
-    // Start server
-    e.Logger.Fatal(e.Start(":80"))
+    e.Logger.Info("listening on", port)
+    e.Logger.Fatal(e.Start(":"+port))
 }
 
 
