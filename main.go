@@ -1,17 +1,22 @@
 package main
 
 import (
-	"html/template"
-	"io"
+    "html/template"
+    "io"
     "os"
-	"net/http"
+    "net/http"
     "embed"
 
-	"github.com/Jerell/tasteranker/api/htmlcontent"
-	"github.com/Jerell/tasteranker/components"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+    "github.com/Jerell/tasteranker/api/htmlcontent"
+    "github.com/Jerell/tasteranker/components"
+    "github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4/middleware"
+
+    "github.com/joho/godotenv"
 )
+
+//go:embed assets/*
+var assets embed.FS
 
 //go:embed public/views/*
 var resources embed.FS
@@ -25,12 +30,17 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 func main() {
+    e := echo.New()
+    
+    err := godotenv.Load()
+    if err != nil {
+        e.Logger.Fatal("Error loading .env file")
+    }
+
     port := os.Getenv("PORT")
     if port == "" {
         port = "8080"
     }
-
-    e := echo.New()
 
     t := &Template{
         templates: template.Must(template.ParseFS(resources, "public/views/*.html")),
@@ -56,7 +66,6 @@ func main() {
     e.Static("/", "assets")
 
     htmlGroup := e.Group("/html")
-    println(2020202002)
     htmlcontent.UseSubroute(htmlGroup)
 
     e.Logger.Info("listening on", port)
