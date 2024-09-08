@@ -38,7 +38,7 @@ func main() {
     e.GET("/", func(c echo.Context) error {
         // Pass data to the template
         data := map[string]interface{}{
-            "Name": "Gooby",
+            "Name": "placeholder name",
         }
         return c.Render(http.StatusOK, "hello.html", data)
     })
