@@ -4,12 +4,16 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+    "embed"
 
 	"github.com/Jerell/tasteranker/api/htmlcontent"
 	"github.com/Jerell/tasteranker/components"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
+
+//go:embed public/views/*
+var resources embed.FS
 
 type Template struct {
     templates *template.Template
@@ -23,7 +27,7 @@ func main() {
     e := echo.New()
 
     t := &Template{
-        templates: template.Must(template.ParseGlob("public/views/*.html")),
+        templates: template.Must(template.ParseFS(resources, "public/views/*.html")),
     }
     e.Renderer = t
 
