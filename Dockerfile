@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 COPY . .
+RUN touch .env
 RUN go build -v -o /run-app .
 
 

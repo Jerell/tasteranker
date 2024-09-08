@@ -38,11 +38,9 @@ func main() {
 
     env := os.Getenv("APP_ENV")
 
-    if env == "development" {
-        err := godotenv.Load()
-        if err != nil {
-            e.Logger.Fatal("Error loading .env file")
-        }
+    err := godotenv.Load()
+    if err != nil {
+        e.Logger.Fatal("Error loading .env file")
     }
 
     port := os.Getenv("PORT")
@@ -63,20 +61,14 @@ func main() {
 
     })
 
-    e.GET("/", func(c echo.Context) error {
-        // Pass data to the template
-        data := map[string]interface{}{
-            "Name": "placeholder name",
-        }
-        return c.Render(http.StatusOK, "hello.html", data)
-    })
-
 
     if env == "development" {
         e.Static("/assets", "./assets")
     } else {
         e.GET("/assets", func(c echo.Context) error {
             key := c.Param("*")
+            println(key)
+            println(20000000)
             ctx := context.Background()
 
             client, err := tigris.Client( ctx )
@@ -90,6 +82,7 @@ func main() {
                 Key:    aws.String(key),
             })
             if err != nil {
+                println(err)
                 return c.String(http.StatusNotFound, "File not found")
             }
             defer resp.Body.Close()
@@ -99,10 +92,17 @@ func main() {
         })
     }
 
+    e.GET("/", func(c echo.Context) error {
+        // Pass data to the template
+        data := map[string]interface{}{
+            "Name": "placeholder name",
+        }
+        return c.Render(http.StatusOK, "hello.html", data)
+    })
+
     htmlGroup := e.Group("/html")
     htmlcontent.UseSubroute(htmlGroup)
 
-    e.Logger.Info("listening on", port)
     e.Logger.Fatal(e.Start(":"+port))
 }
 
