@@ -5,6 +5,8 @@ import (
     "io"
     "os"
     "net/http"
+    "path/filepath"
+    "mime"
     "embed"
     "context"
 
@@ -80,8 +82,13 @@ func main() {
             }
             defer resp.Body.Close()
 
+            contentType := mime.TypeByExtension(filepath.Ext(key))
+            if contentType == "" {
+                contentType = "application/octet-stream" // Default fallback
+            }
+
             // Stream the S3 object to the client
-            return c.Stream(http.StatusOK, "application/octet-stream", resp.Body)
+            return c.Stream(http.StatusOK, contentType, resp.Body)
         })
     }
 
