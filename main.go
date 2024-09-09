@@ -58,7 +58,7 @@ func main() {
 
     })
 
-    if env == "development" {
+    if env == "yuh" {
         e.Static("/assets", "./assets")
     } else {
         e.GET("/assets/*", func(c echo.Context) error {
@@ -73,10 +73,12 @@ func main() {
             // Use the Tigris client to get the object
             resp, err := client.GetObject(ctx, &s3.GetObjectInput{
                 Bucket: aws.String("frosty-sound-5710"),
-                Key:    aws.String("assets/"+key),
+                Key:    aws.String("oassets/"+key),
             })
             if err != nil {
-                println(err)
+                println(40404)
+                println(err.Error())
+                println(40405)
                 return c.String(http.StatusNotFound, "File not found")
             }
             defer resp.Body.Close()
