@@ -19,9 +19,6 @@ import (
     "github.com/joho/godotenv"
 )
 
-//go:embed assets/*
-var assets embed.FS
-
 //go:embed public/views/*
 var resources embed.FS
 
@@ -36,12 +33,12 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func main() {
     e := echo.New()
 
-    env := os.Getenv("APP_ENV")
-
     err := godotenv.Load()
     if err != nil {
         e.Logger.Fatal("Error loading .env file")
     }
+
+    env := os.Getenv("APP_ENV")
 
     port := os.Getenv("PORT")
     if port == "" {
@@ -61,14 +58,11 @@ func main() {
 
     })
 
-
     if env == "development" {
         e.Static("/assets", "./assets")
     } else {
-        e.GET("/assets", func(c echo.Context) error {
+        e.GET("/assets/*", func(c echo.Context) error {
             key := c.Param("*")
-            println(key)
-            println(20000000)
             ctx := context.Background()
 
             client, err := tigris.Client( ctx )
@@ -79,7 +73,7 @@ func main() {
             // Use the Tigris client to get the object
             resp, err := client.GetObject(ctx, &s3.GetObjectInput{
                 Bucket: aws.String("frosty-sound-5710"),
-                Key:    aws.String(key),
+                Key:    aws.String("assets/"+key),
             })
             if err != nil {
                 println(err)
