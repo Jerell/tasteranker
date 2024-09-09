@@ -76,9 +76,6 @@ func main() {
                 Key:    aws.String("assets/"+key),
             })
             if err != nil {
-                println(40404)
-                println(err.Error())
-                println(40405)
                 return c.String(http.StatusNotFound, "File not found")
             }
             defer resp.Body.Close()
