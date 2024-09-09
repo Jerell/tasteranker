@@ -1,3 +1,13 @@
+:root {
+    --pale: #FAFAFF;
+    --lighter: #EEF0F2;
+    --light: #ECEBE4;
+    --mid: #DADDD8;
+    --dark: #011627;
+    --primary: #B91372;
+}
+
+
 .outfit-font {
   font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
@@ -10,6 +20,12 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
 }
 
+h1 {
+    font-weight: 700;
+    color: var(--primary);
+}
+
 body {
-    background: red;
+    background: var(--light);
+    color: var(--dark);
 }

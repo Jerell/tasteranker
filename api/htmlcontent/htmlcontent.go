@@ -7,9 +7,10 @@ import (
 )
 
 func UseSubroute(group *echo.Group)  {
-    group.GET("", func (c echo.Context) error {
+    group.GET("*", func (c echo.Context) error {
+        key := c.Param("*")
 		data := map[string]interface{}{
-			"Name": "Scooby",
+			"Name": key,
 		}
         return c.Render(http.StatusOK, "hello.html", data)
     })

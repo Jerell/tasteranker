@@ -1,22 +1,22 @@
 package main
 
 import (
+    "context"
+    "embed"
     "html/template"
     "io"
-    "os"
-    "net/http"
-    "path/filepath"
     "mime"
-    "embed"
-    "context"
+    "net/http"
+    "os"
+    "path/filepath"
 
     "github.com/Jerell/tasteranker/api/htmlcontent"
     "github.com/Jerell/tasteranker/components"
     "github.com/Jerell/tasteranker/tigris"
-    "github.com/labstack/echo/v4"
-    "github.com/labstack/echo/v4/middleware"
     "github.com/aws/aws-sdk-go-v2/aws"
     "github.com/aws/aws-sdk-go-v2/service/s3"
+    "github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4/middleware"
 
     "github.com/joho/godotenv"
 )
@@ -55,11 +55,6 @@ func main() {
     e.Use(middleware.Logger())
     e.Use(middleware.Recover())
 
-    e.GET("/t", func(c echo.Context) error {
-        return components.Render(c, http.StatusOK, components.Hello("ooby"))
-
-    })
-
     if env == "development" {
         e.Static("/assets", "./assets")
     } else {
@@ -91,6 +86,14 @@ func main() {
             return c.Stream(http.StatusOK, contentType, resp.Body)
         })
     }
+
+    e.GET("/t", func(c echo.Context) error {
+        return components.Render(
+            c, http.StatusOK, 
+            components.Main(components.Hello("nested")),
+        )
+
+    })
 
     e.GET("/", func(c echo.Context) error {
         // Pass data to the template
