@@ -49,7 +49,12 @@ func main() {
     }
 
     t := &Template{
-        templates: template.Must(template.ParseFS(resources, "public/views/*.html")),
+        templates: template.Must(
+            template.ParseFS(
+                resources,
+                "public/views/*.html",
+            ),
+        ),
     }
     e.Renderer = t
 
@@ -93,7 +98,6 @@ func main() {
             c, http.StatusOK, 
             components.Main(components.Hello("nested")),
         )
-
     })
 
     usersGroup := e.Group("/users/")
