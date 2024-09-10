@@ -25,6 +25,16 @@ h1 {
     color: var(--primary);
 }
 
+a {
+    color: var(--primary);
+    text-decoration-color: var(--primary);
+
+    &:hover, &:hover h1 {
+        color: var(--dark);
+        text-decoration-color: var(--dark);
+    }
+}
+
 body {
     background: var(--light);
     color: var(--dark);
