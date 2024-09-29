@@ -6,7 +6,7 @@
     --dark: #011627;
     --primary: #B91372;
 
-    background: var(--mid);
+    background: var(--light);
 }
 
 .archivo-black-regular {
@@ -31,7 +31,7 @@ h1 {
     font-family: "Archivo Black", sans-serif;
     font-weight: 400;
     color: var(--primary);
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 a {
@@ -55,5 +55,6 @@ body {
 header {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    background: var(--mid);
+    padding: 0 0.125rem;
 }
