@@ -7,6 +7,31 @@
     --primary: #B91372;
 
     background: var(--light);
+    font-family: "Poppins", sans-serif;
+}
+
+.bg-pale {
+    background: var(--pale);
+}
+
+.bg-lighter {
+    background: var(--lighter);
+}
+
+.bg-light {
+    background: var(--light);
+}
+
+.bg-mid {
+    background: var(--mid);
+}
+
+.bg-dark {
+    background: var(--dark);
+}
+
+.bg-primary {
+    background: var(--primary);
 }
 
 .archivo-black-regular {
@@ -25,6 +50,7 @@ h2, h3, h4, h5, h6 {
   font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  font-weight: 600;
 }
 
 h1 {
@@ -32,6 +58,18 @@ h1 {
     font-weight: 400;
     color: var(--primary);
     font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.6rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+}
+
+h4 {
+    font-size: 1.2rem;
 }
 
 a {
@@ -57,4 +95,23 @@ header {
     flex-direction: row;
     background: var(--mid);
     padding: 0 0.125rem;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.125rem;
+    gap: 1rem;
+
+    article {
+        width: 100%;
+        max-width: 1000px;
+        border-top: 5px solid var(--pale);
+        border-bottom: 2px solid var(--pale);
+    }
+}
+
+.w-full {
+    width: 100%;
 }
