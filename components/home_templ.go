@@ -26,7 +26,7 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<main><article><h2>Rankings</h2><p>This should be left aligned in a section in the middle</p></article><p>This should be in the middle</p><p class=\"w-full\">This should be left aligned because it should span the full width</p></main>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<main><p>The goal is to rate restaurants by comparison.</p><article><h2>Ratings</h2><p>People typically don't use the full range of scores when they leave reviews. It's normal to only leave a review when you feel strongly, because you had an experience that was abnormally positive or negative.</p><p>We might get a better picture of the typical experience by making random comparisons betwen restaurants.</p><p>Getting people to compare restaurants rather than review them individually allows us to calculate an Elo-type rating similar to those used to rank chess players.</p></article><article><h2>Analysis</h2><p>This kind of rating system also allows for detailed analysis that can produce recommendations based on user profiles. People with similar combinations of preferences have similar taste. If we collect some information about the users, we may be able to filter the comparisons and use a smaller subset to produce ratings: We could identify the best Italian restaurant in London as rated by Italians. </p><p>Comparison data could also be filtered by time to show trends or recent performance.</p></article></main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
