@@ -5,8 +5,15 @@
     --mid: #DADDD8;
     --dark: #011627;
     --primary: #B91372;
+
+    background: var(--mid);
 }
 
+.archivo-black-regular {
+  font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
 .outfit-font {
   font-family: "Outfit", sans-serif;
@@ -14,15 +21,17 @@
   font-style: normal;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h2, h3, h4, h5, h6 {
   font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
 }
 
 h1 {
-    font-weight: 700;
+    font-family: "Archivo Black", sans-serif;
+    font-weight: 400;
     color: var(--primary);
+    font-size: 2rem;
 }
 
 a {
@@ -35,7 +44,16 @@ a {
     }
 }
 
+header a {
+    text-decoration: none;
+}
+
 body {
-    background: var(--light);
     color: var(--dark);
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }

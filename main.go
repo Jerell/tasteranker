@@ -96,7 +96,7 @@ func main() {
     e.GET("/", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK, 
-            components.Main(components.Hello("nested")),
+            components.Main(components.Hello("oooo")),
         )
     })
 

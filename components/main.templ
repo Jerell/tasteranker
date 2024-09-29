@@ -9,11 +9,15 @@ templ Main(contents templ.Component) {
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/assets/preflight.css">
         <link rel="stylesheet" href="/assets/index.css">
         <script src="https://unpkg.com/htmx.org@2.0.2"></script>
         <script src="/assets/js/index.js"></script>
     </head>
     <body>
+        @Header()
         @contents
     </body>
     </html>
