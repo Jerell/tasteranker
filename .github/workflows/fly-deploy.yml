@@ -28,7 +28,7 @@ jobs:
       - name: Debug DATABASE_URL
         run: echo "DATABASE_URL=${DATABASE_URL:0:5}... (masked)"
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL:0:5 }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - run: flyctl deploy --remote-only
         env:
