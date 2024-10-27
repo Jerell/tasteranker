@@ -27,5 +27,5 @@ primary_region = 'lhr'
   cpus = 1
 
 [deploy]
-  release_command = "echo DATABASE_URL=\"${DATABASE_URL:0:10}\" && migrate -database \"${DATABASE_URL}\" -path /app/migrations up"
+  release_command = "migrate -database \"${DATABASE_URL}\" -path /app/migrations up"
   strategy = "rolling"
