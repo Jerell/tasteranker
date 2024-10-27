@@ -14,6 +14,7 @@ import (
 	"github.com/Jerell/tasteranker/api/users"
 	"github.com/Jerell/tasteranker/components"
 	"github.com/Jerell/tasteranker/tigris"
+    "github.com/Jerell/tasteranker/internal/db"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/labstack/echo/v4"
@@ -40,6 +41,13 @@ func main() {
     if err != nil {
         e.Logger.Fatal("Error loading .env file")
     }
+
+    dbConfig := db.NewConfig()
+    database, err := db.NewConnection(dbConfig)
+    if err != nil {
+        e.Logger.Fatal(err)
+    }
+    defer database.Close()
 
     env := os.Getenv("APP_ENV")
 
@@ -101,7 +109,8 @@ func main() {
     })
 
     usersGroup := e.Group("/users/")
-    users.UseSubroute(usersGroup)
+    userStore := db.NewUserStore(database)
+    users.UseSubroute(usersGroup, userStore)
 
     htmlGroup := e.Group("/html/")
     htmlcontent.UseSubroute(htmlGroup)

@@ -25,3 +25,7 @@ primary_region = 'lhr'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[deploy]
+  release_command = "migrate -database \"${DATABASE_URL}\" -path internal/db/migrations up"
+
