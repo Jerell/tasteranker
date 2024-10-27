@@ -48,8 +48,4 @@ RUN touch .env
 # Set working directory
 WORKDIR /app
 
-# Add a health check script
-COPY --from=builder /usr/src/app/scripts/healthcheck.sh /app/healthcheck.sh
-RUN chmod +x /app/healthcheck.sh
-
 CMD ["run-app"]
