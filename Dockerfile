@@ -10,12 +10,12 @@ RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate
 COPY . .
 RUN go build -v -o /run-app .
 
-
 FROM debian:bookworm
-
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /run-app /usr/local/bin/
+# Copy the migrate binary
 COPY --from=builder /go/bin/migrate /usr/local/bin/
-COPY --from=builder /usr/src/app/internal/db/migrations /internal/db/migrations
+# Copy migrations to a specific folder
+COPY --from=builder /usr/src/app/internal/db/migrations /app/migrations
 RUN touch .env
 CMD ["run-app"]
