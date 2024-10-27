@@ -1,26 +1,26 @@
 package main
 
 import (
-	"context"
-	"embed"
-	"html/template"
-	"io"
-	"mime"
-	"net/http"
-	"os"
-	"path/filepath"
+    "context"
+    "embed"
+    "html/template"
+    "io"
+    "mime"
+    "net/http"
+    "os"
+    "path/filepath"
 
-	"github.com/Jerell/tasteranker/api/htmlcontent"
-	"github.com/Jerell/tasteranker/api/users"
-	"github.com/Jerell/tasteranker/components"
-	"github.com/Jerell/tasteranker/tigris"
+    "github.com/Jerell/tasteranker/api/htmlcontent"
+    "github.com/Jerell/tasteranker/api/users"
+    "github.com/Jerell/tasteranker/components"
+    "github.com/Jerell/tasteranker/tigris"
     "github.com/Jerell/tasteranker/internal/db"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+    "github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4/middleware"
 
-	"github.com/joho/godotenv"
+    "github.com/joho/godotenv"
 )
 
 //go:embed public/views/*
@@ -37,9 +37,11 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func main() {
     e := echo.New()
 
-    err := godotenv.Load()
-    if err != nil {
-        e.Logger.Fatal("Error loading .env file")
+    if os.Getenv("APP_ENV") == "development" {
+        err := godotenv.Load()
+        if err != nil {
+            e.Logger.Warn("Error loading .env file in development")
+        }
     }
 
     dbConfig := db.NewConfig()
