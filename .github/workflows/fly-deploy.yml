@@ -26,7 +26,9 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Debug DATABASE_URL
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL:0:5 }}... (masked)"
+        run: echo "DATABASE_URL=$DATABASE_URL... (masked)"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL:0:5 }}
 
       - run: flyctl deploy --remote-only
         env:
