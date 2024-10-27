@@ -5,6 +5,7 @@ import (
     "embed"
     "html/template"
     "io"
+    "log"
     "mime"
     "net/http"
     "os"
@@ -13,8 +14,8 @@ import (
     "github.com/Jerell/tasteranker/api/htmlcontent"
     "github.com/Jerell/tasteranker/api/users"
     "github.com/Jerell/tasteranker/components"
-    "github.com/Jerell/tasteranker/tigris"
     "github.com/Jerell/tasteranker/internal/db"
+    "github.com/Jerell/tasteranker/tigris"
     "github.com/aws/aws-sdk-go-v2/aws"
     "github.com/aws/aws-sdk-go-v2/service/s3"
     "github.com/labstack/echo/v4"
@@ -37,11 +38,9 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func main() {
     e := echo.New()
 
-    if os.Getenv("APP_ENV") == "development" {
-        err := godotenv.Load()
-        if err != nil {
-            e.Logger.Warn("Error loading .env file in development")
-        }
+    err := godotenv.Load()
+    if err != nil {
+        e.Logger.Warn("Error loading .env file in development")
     }
 
     dbConfig := db.NewConfig()
@@ -57,6 +56,7 @@ func main() {
     if port == "" {
         port = "8080"
     }
+    log.Println(env, port)
 
     t := &Template{
         templates: template.Must(
