@@ -87,7 +87,6 @@ func main() {
     })
     
     e.GET("/", func(c echo.Context) error {
-        e.Logger.Print("please")
         return components.Render(
             c, http.StatusOK, 
             components.Main(components.Home()),
