@@ -2,9 +2,6 @@ package main
 
 import (
     "context"
-    "embed"
-    "html/template"
-    "io"
     "log"
     "mime"
     "net/http"
@@ -23,17 +20,6 @@ import (
 
     "github.com/joho/godotenv"
 )
-
-//go:embed public/views/*
-var resources embed.FS
-
-type Template struct {
-    templates *template.Template
-}
-
-func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-    return t.templates.ExecuteTemplate(w, name, data)
-}
 
 func main() {
     e := echo.New()
@@ -57,16 +43,6 @@ func main() {
         port = "8080"
     }
     log.Println(env, port)
-
-    t := &Template{
-        templates: template.Must(
-            template.ParseFS(
-                resources,
-                "public/views/*.html",
-            ),
-        ),
-    }
-    e.Renderer = t
 
     e.Use(middleware.Logger())
     e.Use(middleware.Recover())
