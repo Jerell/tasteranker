@@ -2,7 +2,6 @@ package components
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/a-h/templ"
@@ -14,7 +13,7 @@ func Render(ctx echo.Context, status int, t templ.Component) error {
 
     err := t.Render(context.Background(), ctx.Response().Writer)
     if err != nil {
-        log.Println(err)
+        ctx.Logger().Error(err)
         return ctx.String(http.StatusInternalServerError, "failed to render response template")
     }
 
