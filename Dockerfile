@@ -21,6 +21,8 @@ RUN go build -v -o /run-app .
 # Second stage: final image
 FROM debian:bookworm-slim
 
+COPY --from=builder /usr/src/app/components/*.txt /usr/src/app/components/
+
 # Install necessary runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
