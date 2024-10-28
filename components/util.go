@@ -8,7 +8,7 @@ import (
 )
 
 func Render(ctx echo.Context, status int, t templ.Component) error {
-    // ctx.Response().Writer.WriteHeader(status)
+    ctx.Response().Writer.WriteHeader(status)
 
     err := t.Render(context.Background(), ctx.Response().Writer)
     if err != nil {
