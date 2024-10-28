@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 :root {
     --pale: #FAFAFF;
     --lighter: #EEF0F2;
@@ -91,10 +96,10 @@ body {
 }
 
 header {
-    display: flex;
-    flex-direction: row;
+    @apply flex flex-row justify-between;
     background: var(--mid);
     padding: 0 0.125rem;
+    align-items: end;
 }
 
 main {

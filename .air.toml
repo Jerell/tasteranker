@@ -14,6 +14,7 @@ tmp_dir = "tmp"
     "testdata",
     "ts/node_modules"
     "ts/build"
+    "ts"
     ]
   exclude_file = []
   exclude_regex = ["_test.go", ".*_templ.go"]
