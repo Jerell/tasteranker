@@ -1,0 +1,20 @@
+package components
+
+type Page struct {
+    label string
+    href string
+}
+
+templ pageLink(p Page) {
+    <li>
+        <a href={ templ.URL(p.href) }>{ p.label }</a>
+    </li>
+}
+
+templ Navigation(pages []Page) {
+    <ul>
+    for _, page := range pages {
+        @pageLink(page)
+    }
+    </ul>
+}

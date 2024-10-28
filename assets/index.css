@@ -78,6 +78,7 @@ h4 {
 }
 
 a {
+    @apply cursor-pointer;
     color: var(--primary);
     text-decoration-color: var(--primary);
 
@@ -96,10 +97,13 @@ body {
 }
 
 header {
-    @apply flex flex-row justify-between;
+    @apply flex flex-row justify-between items-center gap-2;
     background: var(--mid);
     padding: 0 0.125rem;
-    align-items: end;
+
+    .user {
+        @apply h-full flex flex-row items-center p-2 ml-auto;
+    }
 }
 
 main {
@@ -119,6 +123,6 @@ main {
     }
 }
 
-.w-full {
-    width: 100%;
+button {
+    @apply p-1 bg-red-50;
 }

@@ -103,12 +103,20 @@ func main() {
         })
     }
 
+    e.GET("/about", func(c echo.Context) error {
+        return components.Render(
+            c, http.StatusOK, 
+            components.Main(components.About()),
+        )
+    })
+    
     e.GET("/", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK, 
             components.Main(components.Home()),
         )
     })
+
 
     usersGroup := e.Group("/users/")
     userStore := db.NewUserStore(database)

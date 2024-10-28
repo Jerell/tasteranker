@@ -1,10 +1,15 @@
 package components
 
+var mainMenu = []Page{
+    {label: "about", href: "/about"},
+}
+
 templ Header() {
     <header>
         <a href="/">
             <h1>TasteRanker</h1>
         </a>
+        @Navigation(mainMenu)
         @User()
     </header>
 }
