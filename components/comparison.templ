@@ -1,0 +1,47 @@
+package components
+
+type item struct {
+    label string
+}
+
+var leftItems = []item{
+    { label: "mcd" },
+    { label: "kfc" },
+    { label: "wagama" },
+    { label: "costa" },
+    { label: "pho" },
+}
+
+var rightItems = []item{
+    { label: "popeye" },
+    { label: "winsopp" },
+    { label: "wasabi" },
+    { label: "nando" },
+    { label: "pizza expess" },
+}
+
+
+
+templ itemDisplay (it item) {
+    <div class={"item"}>
+        <p>
+            { it.label }
+        </p>
+    </div>
+}
+
+templ feed(items []item) {
+    <div class={"feed"}>
+    for _, it := range items {
+        @itemDisplay(it)
+    }
+    </div>
+}
+
+templ Comparison() {
+    <div class={"comparison"}>
+        @feed(leftItems)
+        @feed(rightItems)
+    </div>
+}
+

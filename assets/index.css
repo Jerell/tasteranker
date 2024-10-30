@@ -126,3 +126,39 @@ main {
 button {
     @apply p-1 bg-red-50;
 }
+
+.comparison {
+    @apply grid grid-cols-2 w-full;
+    
+    .feed {
+        @apply w-full flex flex-row items-center;
+
+        .item {
+            @apply h-32 w-32 flex flex-col items-center justify-center
+            bg-amber-400 bg-opacity-10 transition-colors;
+        }
+    }
+    .feed:nth-child(1) {
+        @apply flex-row-reverse;
+
+        .item {
+            @apply bg-teal-400 bg-opacity-10;
+        }
+    }
+
+    .feed .item:nth-child(1) {
+        @apply bg-opacity-80 cursor-pointer;
+
+        &:hover {
+            @apply bg-opacity-100;
+        }
+    }
+
+    .feed .item:nth-child(2) { @apply bg-opacity-60; }
+    .feed .item:nth-child(3) { @apply bg-opacity-40; }
+    .feed .item:nth-child(4) { @apply bg-opacity-20; }
+
+    .item:nth-child(1) {
+        @apply h-36 w-36;
+    }
+}
