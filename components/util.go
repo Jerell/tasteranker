@@ -6,7 +6,6 @@ import (
 )
 
 func Render(ctx echo.Context, status int, t templ.Component) error {
-    ctx.Response().Writer.WriteHeader(status)
     err := t.Render(ctx.Request().Context(), ctx.Response().Writer)
     if err != nil {
         ctx.Logger().Error(err)
