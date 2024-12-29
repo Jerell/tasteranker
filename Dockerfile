@@ -21,7 +21,10 @@ RUN go build -v -o /run-app .
 # Second stage: final image
 FROM debian:bookworm-slim
 
+RUN mkdir -p /usr/src/app/components /usr/src/app/internal/auth
+
 COPY --from=builder /usr/src/app/components/*.txt /usr/src/app/components/
+COPY --from=builder /usr/src/app/internal/auth/*.txt /usr/src/app/internal/auth/
 
 # Install necessary runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
