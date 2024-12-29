@@ -1,5 +1,7 @@
 package components
 
+import "github.com/Jerell/tasteranker/internal/auth"
+
 var mainMenu = []Page{
     {label: "about", href: "/about"},
 }
@@ -10,6 +12,19 @@ templ Header() {
             <h1>TasteRanker</h1>
         </a>
         @Navigation(mainMenu)
-        @User()
+        @HeaderUser()
     </header>
 }
+
+templ HeaderUser() {
+    if authenticated, exists := ctx.Value("authenticated").(bool); exists && authenticated {
+        if userName, exists := ctx.Value("user_name").(string); exists && userName != "" {
+            @auth.UserInfo(userName)
+        } else {
+            @auth.LoginButton()
+        }
+    } else {
+        @auth.LoginButton()
+    }
+}
+

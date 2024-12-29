@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"mime"
 	"net/http"
 	"os"
@@ -18,11 +17,28 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
+	"github.com/Jerell/tasteranker/internal/auth"
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
+	"github.com/labstack/echo-contrib/session"
 )
 
 func main() {
 	e := echo.New()
+
+    e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+        AllowOrigins: []string{"http://localhost", "http://localhost:80"},
+        AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodOptions},
+        AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, 
+            echo.HeaderAuthorization, "HX-Request", "HX-Trigger"},
+        AllowCredentials: true,
+    }))
+
+    e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+        TokenLookup: "form:_csrf", 
+        CookieName:  "csrf_token",
+        CookiePath:  "/",
+    }))
 
 	err := godotenv.Load()
 	if err != nil {
@@ -42,10 +58,28 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	log.Println(env, port)
+
+	baseURL := os.Getenv("BASE_URL")
+	if baseURL == "" {
+		if port == "80" {
+			baseURL = "http://localhost"
+		} else {
+			baseURL = "http://localhost:" + port
+		}
+	}
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(
+		session.Middleware(
+			sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET"))),
+		),
+	)
+    e.Use(auth.AuthContext)
+
+	auth.Init(baseURL)
+	authGroup := e.Group("/auth")
+    auth.UseSubroute(authGroup)
 
 	if env == "development" {
 		e.Static("/assets", "./assets")
