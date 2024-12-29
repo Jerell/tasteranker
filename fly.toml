@@ -27,5 +27,5 @@ primary_region = 'lhr'
   cpus = 1
 
 [deploy]
-  release_command = "migrate -verbose -path /app/migrations -database $DATABASE_URL up || [ $? -eq 1 ] || exit $?"
+  release_command = "for i in {1..5}; do migrate -verbose -path /app/migrations -database $DATABASE_URL up && break || sleep 5; done"
   strategy = "rolling"
