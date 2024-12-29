@@ -1,2 +1,2 @@
-<div class=\"user-info\"><p>Logged in as: 
-</p><a href=\"/auth/logout\" class=\"logout-button\">Logout</a></div>
+<div class=\"user\"><p>Hello, 
+!</p><a href=\"/auth/logout\" class=\"logout-button\">Logout</a></div>

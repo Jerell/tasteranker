@@ -3,39 +3,26 @@
 @tailwind utilities;
 
 :root {
-    --pale: #FAFAFF;
-    --lighter: #EEF0F2;
-    --light: #ECEBE4;
-    --mid: #DADDD8;
-    --dark: #011627;
-    --primary: #B91372;
-
-    background: var(--light);
     font-family: "Geist", sans-serif;
-}
 
-.bg-pale {
-    background: var(--pale);
-}
+    /* rose-pine-dawn */
+	--cream: #f2e9e1;
+	--pink: #b4637a;
+	--teal: #56949f;
+	--gold: #ea9d34;
+	--blue: #286983;
+	--lavender: #907aa9;
+	--peach: #d7827e;
+	--purple: #575279;
+	--grey: #9893a5;
+	--background: #faf4ed;
+	--foreground: #575279;
+	--cursor-color: #575279;
+	--selection-background: #faf4ed;
+	--selection-foreground: #575279;
+    /* end rose-pine-dawn */
 
-.bg-lighter {
-    background: var(--lighter);
-}
-
-.bg-light {
-    background: var(--light);
-}
-
-.bg-mid {
-    background: var(--mid);
-}
-
-.bg-dark {
-    background: var(--dark);
-}
-
-.bg-primary {
-    background: var(--primary);
+    background: var(--cream);
 }
 
 .geist-normal {
@@ -53,7 +40,7 @@ h2, h3, h4, h5, h6 {
 
 h1 {
     font-weight: 900;
-    color: var(--primary);
+    color: var(--pink);
     font-size: 1.8rem;
 }
 
@@ -71,12 +58,12 @@ h4 {
 
 a {
     @apply cursor-pointer;
-    color: var(--primary);
-    text-decoration-color: var(--primary);
+    color: var(--pink);
+    text-decoration-color: var(--pink);
 
     &:hover, &:hover h1 {
-        color: var(--dark);
-        text-decoration-color: var(--dark);
+        color: var(--blue);
+        text-decoration-color: var(--purple);
     }
 }
 
@@ -85,17 +72,20 @@ header a {
 }
 
 body {
-    color: var(--dark);
+    color: var(--purple);
 }
 
 header {
     @apply flex flex-row justify-between items-center gap-2;
-    background: var(--mid);
+    background: #fff;
     padding: 0 0.125rem;
 
     .user {
-        @apply h-full flex flex-row items-center p-2 ml-auto;
+        @apply h-full flex flex-row items-center p-2 ml-auto gap-2;
     }
+     .login-button {
+         @apply p-2
+     }
 }
 
 main {
