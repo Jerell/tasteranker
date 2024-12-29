@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/Jerell/tasteranker/api/htmlcontent"
 	"github.com/Jerell/tasteranker/api/users"
@@ -26,33 +27,24 @@ import (
 func main() {
 	e := echo.New()
 
-    e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-        AllowOrigins: []string{"http://localhost", "http://localhost:80"},
-        AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodOptions},
-        AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, 
-            echo.HeaderAuthorization, "HX-Request", "HX-Trigger"},
-        AllowCredentials: true,
-    }))
-
-    e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
-        TokenLookup: "form:_csrf", 
-        CookieName:  "csrf_token",
-        CookiePath:  "/",
-    }))
-
 	err := godotenv.Load()
 	if err != nil {
 		e.Logger.Warn("Error loading .env file in development")
 	}
-
-	dbConfig := db.NewConfig()
-	database, err := db.NewConnection(dbConfig)
-	if err != nil {
-		e.Logger.Fatal(err)
-	}
-	defer database.Close()
-
 	env := os.Getenv("APP_ENV")
+
+	store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
+	store.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400 * 30,
+		HttpOnly: true,
+		Secure:   os.Getenv("APP_ENV") != "development",
+		SameSite: http.SameSiteLaxMode,
+	}
+	e.Use(session.Middleware(store))
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -68,18 +60,49 @@ func main() {
 		}
 	}
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(
-		session.Middleware(
-			sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET"))),
-		),
-	)
-    e.Use(auth.AuthContext)
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{baseURL, "https://accounts.google.com"},
+		AllowMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodOptions,
+		},
+		AllowHeaders: []string{
+			echo.HeaderOrigin,
+			echo.HeaderContentType,
+			echo.HeaderAccept,
+			echo.HeaderAuthorization,
+			"HX-Current-URL",
+			"HX-Request",
+			"Access-Control-Request-Headers",
+			"Access-Control-Request-Method",
+		},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
+	e.Use(auth.AuthContext)
 	auth.Init(baseURL)
 	authGroup := e.Group("/auth")
-    auth.UseSubroute(authGroup)
+	auth.UseSubroute(authGroup)
+
+	csrfSkipper := func(c echo.Context) bool {
+		return strings.HasPrefix(c.Path(), "/auth")
+	}
+
+	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+		TokenLookup: "form:_csrf",
+		CookieName:  "csrf_token",
+		CookiePath:  "/",
+		Skipper:     csrfSkipper,
+	}))
+
+	dbConfig := db.NewConfig()
+	database, err := db.NewConnection(dbConfig)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+	defer database.Close()
 
 	if env == "development" {
 		e.Static("/assets", "./assets")
