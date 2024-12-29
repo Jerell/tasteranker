@@ -27,5 +27,4 @@ primary_region = 'lhr'
   cpus = 1
 
 [deploy]
-  release_command = "migrate -path /app/migrations -database $DATABASE_URL up"
   strategy = "rolling"

@@ -18,3 +18,4 @@ templ:
 tailwind:
 	cd ts && npx tailwindcss -i ../assets/index.css -o ../assets/styles.css --minify --watch
 
+

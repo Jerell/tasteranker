@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	_ "github.com/lib/pq"
+    "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4/database/postgres"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 type Config struct {
@@ -64,4 +67,27 @@ func NewConnection(cfg *Config) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func RunMigrations(db *sql.DB) error {
+    driver, err := postgres.WithInstance(db, &postgres.Config{})
+    if err != nil {
+        return fmt.Errorf("could not create database driver: %w", err)
+    }
+
+    m, err := migrate.NewWithDatabaseInstance(
+        "file:///app/migrations",  // migration files location
+        "postgres", 
+        driver,
+    )
+    if err != nil {
+        return fmt.Errorf("could not create migrate instance: %w", err)
+    }
+    defer m.Close()
+
+    if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+        return fmt.Errorf("failed to run migrations: %w", err)
+    }
+    
+    return nil
 }

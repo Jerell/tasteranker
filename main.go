@@ -104,6 +104,12 @@ func main() {
 	}
 	defer database.Close()
 
+    if env != "development" {
+        if err := db.RunMigrations(database); err != nil {
+            e.Logger.Warnf("Warning: Migration error: %v", err)
+        }
+    }
+
 	if env == "development" {
 		e.Static("/assets", "./assets")
 	} else {
