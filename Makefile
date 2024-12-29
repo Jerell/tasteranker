@@ -1,4 +1,4 @@
-.PHONY: migrate-up migrate-down migrate-create
+.PHONY: migrate-up migrate-down migrate-create templ tailwind
 
 DB_URL=postgres://postgres:jerell@localhost:5432/tasteranker-dev?sslmode=disable
 
