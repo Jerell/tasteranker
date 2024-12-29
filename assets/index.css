@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
     --pale: #FAFAFF;
     --lighter: #EEF0F2;
@@ -12,7 +11,7 @@
     --primary: #B91372;
 
     background: var(--light);
-    font-family: "Poppins", sans-serif;
+    font-family: "Geist", sans-serif;
 }
 
 .bg-pale {
@@ -39,28 +38,21 @@
     background: var(--primary);
 }
 
-.archivo-black-regular {
-  font-family: "Archivo Black", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.outfit-font {
-  font-family: "Outfit", sans-serif;
+.geist-normal {
+  font-family: "Geist", serif;
   font-optical-sizing: auto;
+  font-weight: normal;
   font-style: normal;
 }
 
 h2, h3, h4, h5, h6 {
-  font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   font-weight: 600;
 }
 
 h1 {
-    font-family: "Archivo Black", sans-serif;
-    font-weight: 400;
+    font-weight: 900;
     color: var(--primary);
     font-size: 1.8rem;
 }
