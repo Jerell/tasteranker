@@ -8,50 +8,58 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// SetContextValues sets values in both the request context and Echo context
+func SetContextValues(c echo.Context, values map[string]interface{}) {
+	ctx := c.Request().Context()
+
+	for key, value := range values {
+		ctx = context.WithValue(ctx, key, value)
+		c.Set(key, value) // also set in Echo's context
+	}
+
+	c.SetRequest(c.Request().WithContext(ctx))
+}
+
 func AuthContext(next echo.HandlerFunc) echo.HandlerFunc {
-    return func(c echo.Context) error {
-        session, err := Store.Get(c.Request(), "auth-session")
-        if err != nil {
-            fmt.Printf("Session error: %v\n", err)
-            c.Set("authenticated", false)
-            c.Set("user_name", "")
+	return func(c echo.Context) error {
+		session, err := Store.Get(c.Request(), "auth-session")
+		if err != nil {
+			SetContextValues(c, map[string]interface{}{
+				"authenticated": false,
+				"user_name":     "",
+				"user_id":       "",
+			})
+			return next(c)
+		}
+
+		fmt.Printf("Session values in middleware: %+v\n", session.Values)
+
+		userID, ok := session.Values["user_id"]
+		if !ok {
+			SetContextValues(c, map[string]interface{}{
+				"authenticated": false,
+				"user_name":     "",
+				"user_id":       "",
+			})
             return next(c)
-        }
+		}
 
-        fmt.Printf("Session values in middleware: %+v\n", session.Values)
-        
-        _, ok := session.Values["user_id"]
-        if !ok {
-            fmt.Printf("No user_id found in session\n")
-            // Try with context.WithValue
-            ctx := context.WithValue(c.Request().Context(), "authenticated", false)
-            ctx = context.WithValue(ctx, "user_name", "")
-            c.SetRequest(c.Request().WithContext(ctx))
-            // Also keep the c.Set for debugging
-            c.Set("authenticated", false)
-            c.Set("user_name", "")
-            return next(c)
-        }
+        SetContextValues(c, map[string]interface{}{
+            "authenticated": true,
+            "user_name":    session.Values["name"],
+            "user_id": userID,
+        })
 
-        // Try both methods of setting the context
-        fmt.Printf("Setting context values for authenticated user: %v\n", session.Values["name"])
-        ctx := context.WithValue(c.Request().Context(), "authenticated", true)
-        ctx = context.WithValue(ctx, "user_name", session.Values["name"])
-        c.SetRequest(c.Request().WithContext(ctx))
-        // Also keep the c.Set for debugging
-        c.Set("authenticated", true)
-        c.Set("user_name", session.Values["name"])
-
-        return next(c)
-    }
+		return next(c)
+	}
 }
 
 func RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
-    return func(c echo.Context) error {
-        session, err := Store.Get(c.Request(), "auth-session")
-        if err != nil || session.Values["user_id"] == nil {
-            return c.Redirect(http.StatusTemporaryRedirect, "/auth/google")
-        }
-        return next(c)
-    }
+	return func(c echo.Context) error {
+		session, err := Store.Get(c.Request(), "auth-session")
+		if err != nil || session.Values["user_id"] == nil {
+			return c.Redirect(http.StatusTemporaryRedirect, "/auth/google")
+		}
+		return next(c)
+	}
 }
