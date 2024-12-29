@@ -27,5 +27,5 @@ primary_region = 'lhr'
   cpus = 1
 
 [deploy]
-  release_command = "migrate -verbose -path /app/migrations -database $DATABASE_URL up || (grep -q 'no change' && exit 0) || exit $?"
+  release_command = "migrate -verbose -path /app/migrations -database $DATABASE_URL up || [ $? -eq 1 ] || exit $?"
   strategy = "rolling"
