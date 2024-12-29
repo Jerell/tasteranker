@@ -1,6 +1,9 @@
 package components
 
-import "github.com/Jerell/tasteranker/internal/auth"
+import (
+    "fmt"
+    "github.com/Jerell/tasteranker/internal/auth"
+)
 
 var mainMenu = []Page{
     {label: "about", href: "/about"},
@@ -17,13 +20,30 @@ templ Header() {
 }
 
 templ HeaderUser() {
-    if authenticated, exists := ctx.Value("authenticated").(bool); exists && authenticated {
+    <div>Starting HeaderUser...</div>
+    if auth := ctx.Value("authenticated"); auth != nil {
+        <div>Raw auth value: { fmt.Sprintf("%T: %v", auth, auth) }</div>
+    } else {
+        <div>Auth value is nil</div>
+    }
+
+    if name := ctx.Value("user_name"); name != nil {
+        <div>Raw name value: { fmt.Sprintf("%T: %v", name, name) }</div>
+    } else {
+        <div>Name value is nil</div>
+    }
+
+    if authenticated, exists := ctx.Value("authenticated").(bool); exists {
+        <div>Found authenticated value: { fmt.Sprintf("%v", authenticated) }</div>
         if userName, exists := ctx.Value("user_name").(string); exists && userName != "" {
+            <div>Found username: { userName }</div>
             @auth.UserInfo(userName)
         } else {
+            <div>No username or empty string found in context</div>
             @auth.LoginButton()
         }
     } else {
+        <div>No authenticated value found in context</div>
         @auth.LoginButton()
     }
 }

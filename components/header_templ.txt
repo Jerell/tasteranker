@@ -1,2 +1,15 @@
 <header><a href=\"/\"><h1>TasteRanker</h1></a>
 </header>
+<div>Starting HeaderUser...</div>
+<div>Raw auth value: 
+</div>
+<div>Auth value is nil</div>
+<div>Raw name value: 
+</div>
+<div>Name value is nil</div>
+<div>Found authenticated value: 
+</div>
+<div>Found username: 
+</div>
+<div>No username or empty string found in context</div>
+<div>No authenticated value found in context</div>

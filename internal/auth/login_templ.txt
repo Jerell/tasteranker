@@ -1,1 +1,1 @@
-<a href=\"/auth/google\" class=\"login-button\">Login with Gaogle</a>
+<a href=\"/auth/google\" class=\"login-button\">Login with Google</a>

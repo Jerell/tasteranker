@@ -4,14 +4,8 @@ templ UserInfo(name string) {
     <div class="user-info">
         <p>Logged in as: { name }</p>
 
-        <form
-            hx-post="/auth/logout"
-            hx-push-url="true"
-        >
-            <input type="hidden" name="_csrf" value={ ctx.Value("csrf").(string) }/>
-            <button type="submit" class="login-button">
-                Logout
-            </button>
-        </form>
+        <a href="/auth/logout" class="logout-button">
+            Logout
+        </a>
     </div>
 }
