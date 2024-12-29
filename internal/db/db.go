@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -50,14 +49,12 @@ func NewConnection(cfg *Config) (*sql.DB, error) {
     var err error
 
     if cfg.Host != "localhost" && cfg.Port == "" {
-        fmt.Printf("Connecting with full URL: %s\n", maskPassword(cfg.Host)) 
         db, err = sql.Open("postgres", cfg.Host)
     } else {
         connStr := fmt.Sprintf(
             "host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
             cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName, cfg.SSLMode,
         )
-        fmt.Printf("Connecting with connection string: %s\n", maskPassword(connStr)) 
         db, err = sql.Open("postgres", connStr)
     }
 
@@ -73,17 +70,6 @@ func NewConnection(cfg *Config) (*sql.DB, error) {
 
     fmt.Printf("Database ping successful\n") 
     return db, nil
-}
-
-// Helper function to mask password in logs
-func maskPassword(connStr string) string {
-    // Simple password masking for URL format
-    return strings.Replace(
-        connStr,
-        "password="+getEnvOrDefault("DB_PASSWORD", "postgres"),
-        "password=****",
-        1,
-    )
 }
 
 func RunMigrations(db *sql.DB) error {
