@@ -27,6 +27,7 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Run database migrations
-        run: flyctl ssh console -C "migrate -database ${DATABASE_URL} -path /app/migrations up"
+        run: |
+          flyctl ssh console -C 'migrate -database "'$DATABASE_URL'" -path /app/migrations up'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
