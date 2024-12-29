@@ -14,7 +14,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install AWS CLI
-        run: sudo apt-get install -y awscli
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
 
       - name: Upload assets to Fly Storage
         env:
