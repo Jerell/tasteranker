@@ -39,8 +39,6 @@ COPY --from=builder /run-app /usr/local/bin/
 
 # Copy migrate binary
 COPY --from=builder /go/bin/migrate /usr/local/bin/
-COPY --from=builder /usr/src/app/migrate.sh /app/migrate.sh
-RUN chmod +x /app/migrate.sh
 
 # Create migrations directory and copy migrations
 RUN mkdir -p /app/migrations
