@@ -1,3 +1,5 @@
 tmp
 node_modules
 .env
+tasteranker-key.json
+tasteranker-key.base64
