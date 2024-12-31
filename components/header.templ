@@ -6,6 +6,11 @@ import (
 
 var mainMenu = []Page{
     {label: "about", href: "/about"},
+    {label: "register", href: "/register"},
+}
+
+var authedMenu = []Page{
+    {label: "about", href: "/about"},
 }
 
 templ Header() {
@@ -13,7 +18,11 @@ templ Header() {
         <a href="/">
             <h1>TasteRanker</h1>
         </a>
-        @Navigation(mainMenu)
+        if authenticated, exists := ctx.Value("authenticated").(bool); exists && authenticated {
+            @Navigation(authedMenu)
+        } else {
+            @Navigation(mainMenu)
+        }
         @HeaderUser()
     </header>
 }

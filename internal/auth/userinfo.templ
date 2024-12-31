@@ -2,7 +2,7 @@ package auth
 
 templ UserInfo(name string) {
     <div class="user">
-        <p>Hello, { name }!</p>
+        <p>Hello, <a href="/profile">{ name }</a>!</p>
 
         <a href="/auth/logout" class="logout-button">
             Logout

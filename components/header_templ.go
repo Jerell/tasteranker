@@ -14,6 +14,11 @@ import (
 
 var mainMenu = []Page{
 	{label: "about", href: "/about"},
+	{label: "register", href: "/register"},
+}
+
+var authedMenu = []Page{
+	{label: "about", href: "/about"},
 }
 
 func Header() templ.Component {
@@ -38,9 +43,16 @@ func Header() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Navigation(mainMenu).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if authenticated, exists := ctx.Value("authenticated").(bool); exists && authenticated {
+			templ_7745c5c3_Err = Navigation(authedMenu).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = Navigation(mainMenu).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		templ_7745c5c3_Err = HeaderUser().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

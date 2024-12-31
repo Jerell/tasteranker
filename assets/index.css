@@ -6,36 +6,41 @@
     font-family: "Geist", sans-serif;
 
     /* rose-pine-dawn */
-	--cream: #f2e9e1;
-	--pink: #b4637a;
-	--teal: #56949f;
-	--gold: #ea9d34;
-	--blue: #286983;
-	--lavender: #907aa9;
-	--peach: #d7827e;
-	--purple: #575279;
-	--grey: #9893a5;
-	--background: #faf4ed;
-	--foreground: #575279;
-	--cursor-color: #575279;
-	--selection-background: #faf4ed;
-	--selection-foreground: #575279;
+    --cream: #f2e9e1;
+    --pink: #b4637a;
+    --teal: #56949f;
+    --gold: #ea9d34;
+    --blue: #286983;
+    --lavender: #907aa9;
+    --peach: #d7827e;
+    --purple: #575279;
+    --grey: #9893a5;
+    --background: #faf4ed;
+    --foreground: #575279;
+    --cursor-color: #575279;
+    --selection-background: #faf4ed;
+    --selection-foreground: #575279;
     /* end rose-pine-dawn */
 
-    background: var(--cream);
+    background: var(--background);
+    color: var(--foreground);
 }
 
 .geist-normal {
-  font-family: "Geist", serif;
-  font-optical-sizing: auto;
-  font-weight: normal;
-  font-style: normal;
+    font-family: "Geist", serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
 }
 
-h2, h3, h4, h5, h6 {
-  font-optical-sizing: auto;
-  font-style: normal;
-  font-weight: 600;
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 600;
 }
 
 h1 {
@@ -46,6 +51,8 @@ h1 {
 
 h2 {
     font-size: 1.6rem;
+    @apply border-b;
+    border-color: var(--cream);
 }
 
 h3 {
@@ -61,7 +68,8 @@ a {
     color: var(--pink);
     text-decoration-color: var(--pink);
 
-    &:hover, &:hover h1 {
+    &:hover,
+    &:hover h1 {
         color: var(--blue);
         text-decoration-color: var(--purple);
     }
@@ -81,11 +89,20 @@ header {
     padding: 0 0.125rem;
 
     .user {
-        @apply h-full flex flex-row items-center p-2 ml-auto gap-2;
+        @apply h-full flex flex-row items-center p-2 w-fit gap-2 whitespace-nowrap;
     }
-     .login-button {
-         @apply p-2
-     }
+
+    .login-button {
+        @apply p-2 whitespace-nowrap;
+    }
+
+    .main-menu {
+        @apply w-full;
+
+        ul {
+            @apply flex flex-row gap-1;
+        }
+    }
 }
 
 main {
@@ -111,15 +128,15 @@ button {
 
 .comparison {
     @apply grid grid-cols-2 w-full;
-    
+
     .feed {
         @apply w-full flex flex-row items-center;
 
         .item {
-            @apply h-32 w-32 flex flex-col items-center justify-center
-            bg-amber-400 bg-opacity-10 transition-colors;
+            @apply h-32 w-32 flex flex-col items-center justify-center bg-amber-400 bg-opacity-10 transition-colors;
         }
     }
+
     .feed:nth-child(1) {
         @apply flex-row-reverse;
 
@@ -136,11 +153,35 @@ button {
         }
     }
 
-    .feed .item:nth-child(2) { @apply bg-opacity-60; }
-    .feed .item:nth-child(3) { @apply bg-opacity-40; }
-    .feed .item:nth-child(4) { @apply bg-opacity-20; }
+    .feed .item:nth-child(2) {
+        @apply bg-opacity-60;
+    }
+
+    .feed .item:nth-child(3) {
+        @apply bg-opacity-40;
+    }
+
+    .feed .item:nth-child(4) {
+        @apply bg-opacity-20;
+    }
 
     .item:nth-child(1) {
         @apply h-36 w-36;
     }
+}
+
+.profile {
+    .head {
+        .id {
+            @apply opacity-30;
+        }
+
+        .subheading {
+            @apply text-sm;
+        }
+    }
+}
+
+.register {
+    @apply p-2;
 }

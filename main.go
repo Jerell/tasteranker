@@ -9,6 +9,7 @@ import (
     "strings"
     
     "github.com/Jerell/tasteranker/components"
+    "github.com/Jerell/tasteranker/components/views"
     "github.com/Jerell/tasteranker/internal/db"
     "github.com/Jerell/tasteranker/internal/users"
     "github.com/Jerell/tasteranker/internal/places"
@@ -152,12 +153,29 @@ func main() {
             return c.Stream(http.StatusOK, contentType, resp.Body)
         })
     }
+
+    protected := e.Group("")
+    protected.Use(auth.RequireAuth)
     
     // Frontend routes
     e.GET("/about", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK,
             components.Main(components.About()),
+        )
+    })
+
+    protected.GET("/profile", func(c echo.Context) error {
+        return components.Render(
+            c, http.StatusOK,
+            components.Main(views.Profile()),
+        )
+    })
+
+    e.GET("/register", func(c echo.Context) error {
+        return components.Render(
+            c, http.StatusOK,
+            components.Main(views.Registration()),
         )
     })
     

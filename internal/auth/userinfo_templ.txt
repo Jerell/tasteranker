@@ -1,2 +1,2 @@
-<div class=\"user\"><p>Hello, 
-!</p><a href=\"/auth/logout\" class=\"logout-button\">Logout</a></div>
+<div class=\"user\"><p>Hello, <a href=\"/profile\">
+</a>!</p><a href=\"/auth/logout\" class=\"logout-button\">Logout</a></div>

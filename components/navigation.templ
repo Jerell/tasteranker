@@ -12,9 +12,11 @@ templ pageLink(p Page) {
 }
 
 templ Navigation(pages []Page) {
-    <ul>
-    for _, page := range pages {
-        @pageLink(page)
-    }
-    </ul>
+    <nav class="main-menu">
+        <ul>
+        for _, page := range pages {
+            @pageLink(page)
+        }
+        </ul>
+    </nav>
 }

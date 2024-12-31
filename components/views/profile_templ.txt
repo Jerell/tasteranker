@@ -1,0 +1,3 @@
+<main><article class=\"profile\"><div class=\"head\"><h2>
+ <span class=\"id\">
+</span></h2><p class=\"subheading\">Profile</p></div></article></main>

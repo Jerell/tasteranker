@@ -1,0 +1,12 @@
+package views
+
+templ Profile() {
+    <main>
+        <article class="profile">
+            <div class="head">
+                <h2>{ ctx.Value("user_name").(string) } <span class="id">{ ctx.Value("user_id").(string) }</span></h2>
+                <p class="subheading">Profile</p>
+            </div>
+        </article>
+    </main>
+}

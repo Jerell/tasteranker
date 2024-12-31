@@ -1,0 +1,1 @@
+<main><article class=\"register\"><h2>Register</h2></article></main>

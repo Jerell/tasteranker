@@ -1,2 +1,2 @@
 <main>
-<article><h2>Leaderboard</h2><p>I think I'll show the top 5 or something here</p><p>with a link to a full leaderboard</p><p>maybe it'll be different for logged in users cause the primary thing is the rating</p></article></main>
+<article><h2>Request access</h2><p>During development, up to 100 users will be given access.</p><p>If you wan to join, ask the developer.</p></article></main>

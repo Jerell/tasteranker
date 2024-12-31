@@ -1,5 +1,5 @@
 <li><a href=\"
 \">
 </a></li>
-<ul>
-</ul>
+<nav class=\"main-menu\"><ul>
+</ul></nav>
