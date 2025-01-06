@@ -27,7 +27,6 @@ func (s *PostgresRestaurantStore) CreateChain(chain *types.RestaurantChain) erro
         chain.Name,
         chain.Website,
         chain.Description,
-        chain.FoundedYear,
     ).Scan(&chain.ID, &chain.CreatedAt)
 
     if err != nil {
@@ -48,7 +47,6 @@ func (s *PostgresRestaurantStore) GetChainByID(id int) (*types.RestaurantChain, 
         &chain.Name,
         &chain.Website,
         &chain.Description,
-        &chain.FoundedYear,
         &chain.CreatedAt,
     )
 
@@ -61,20 +59,40 @@ func (s *PostgresRestaurantStore) GetChainByID(id int) (*types.RestaurantChain, 
     return chain, nil
 }
 
-func (s *PostgresRestaurantStore) CreateLocation(metadata *types.RestaurantMetadata) error {
-    query := `
-        INSERT INTO restaurant_metadata (
-            chain_id, cuisine_type, price_range,
-            latitude, longitude, address, operating_hours,
-            website, phone, google_place_id, rating,
-            user_ratings_count
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-        RETURNING item_id`
+func (s *PostgresRestaurantStore) CreateRestaurant(item *types.Item, metadata *types.RestaurantMetadata) error {
+    tx, err := s.db.Begin()
+    if err != nil {
+        return fmt.Errorf("failed to begin transaction: %v", err)
+    }
+    defer tx.Rollback()
 
-    err := s.db.QueryRow(
+    query := `
+        INSERT INTO items (type_id, name)
+        VALUES ($1, $2)
+        RETURNING id, created_at, last_updated_at`
+
+    err = tx.QueryRow(query, item.TypeID, item.Name).Scan(
+        &item.ID,
+        &item.CreatedAt,
+        &item.LastUpdatedAt,
+    )
+    if err != nil {
+        return fmt.Errorf("failed to create item: %v", err)
+    }
+
+    metadata.ItemID = item.ID
+
+    query = `
+        INSERT INTO restaurant_metadata (
+            item_id, chain_id, price_range,
+            latitude, longitude, address, operating_hours,
+            website, phone, google_place_id, google_maps_uri
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
+
+    _, err = tx.Exec(
         query,
+        metadata.ItemID,
         metadata.ChainID,
-        metadata.CuisineType,
         metadata.PriceRange,
         metadata.Latitude,
         metadata.Longitude,
@@ -83,21 +101,25 @@ func (s *PostgresRestaurantStore) CreateLocation(metadata *types.RestaurantMetad
         metadata.Website,
         metadata.Phone,
         metadata.GooglePlaceID,
-    ).Scan(&metadata.ItemID)
-
+        metadata.GoogleMapsUri,
+    )
     if err != nil {
-        return fmt.Errorf("failed to create restaurant location: %v", err)
+        return fmt.Errorf("failed to create restaurant metadata: %v", err)
     }
+
+    if err = tx.Commit(); err != nil {
+        return fmt.Errorf("failed to commit transaction: %v", err)
+    }
+
     return nil
 }
 
 func (s *PostgresRestaurantStore) GetLocationsByChainID(chainID int) ([]types.RestaurantMetadata, error) {
     query := `
         SELECT 
-            item_id, chain_id, cuisine_type, price_range,
+            item_id, chain_id, price_range,
             latitude, longitude, address, operating_hours,
-            website, phone, google_place_id, rating,
-            user_ratings_count
+            website, phone, google_place_id, google_maps_uri
         FROM restaurant_metadata
         WHERE chain_id = $1
         ORDER BY item_id`
@@ -114,7 +136,6 @@ func (s *PostgresRestaurantStore) GetLocationsByChainID(chainID int) ([]types.Re
         err := rows.Scan(
             &loc.ItemID,
             &loc.ChainID,
-            &loc.CuisineType,
             &loc.PriceRange,
             &loc.Latitude,
             &loc.Longitude,
@@ -123,6 +144,7 @@ func (s *PostgresRestaurantStore) GetLocationsByChainID(chainID int) ([]types.Re
             &loc.Website,
             &loc.Phone,
             &loc.GooglePlaceID,
+            &loc.GoogleMapsUri,
         )
         if err != nil {
             return nil, fmt.Errorf("failed to scan location row: %v", err)
@@ -140,10 +162,9 @@ func (s *PostgresRestaurantStore) GetLocationsByChainID(chainID int) ([]types.Re
 func (s *PostgresRestaurantStore) GetNearbyLocations(lat, lon float64, radiusKm float64) ([]types.RestaurantMetadata, error) {
     query := `
         SELECT 
-            item_id, chain_id, cuisine_type, price_range,
+            item_id, chain_id, price_range,
             latitude, longitude, address, operating_hours,
-            website, phone, google_place_id, rating,
-            user_ratings_count
+            website, phone, google_place_id, google_maps_uri
         FROM restaurant_metadata
         WHERE (
             6371 * acos(
@@ -154,7 +175,7 @@ func (s *PostgresRestaurantStore) GetNearbyLocations(lat, lon float64, radiusKm 
                 sin(radians(latitude))
             )
         ) <= $3
-        ORDER BY rating DESC, user_ratings_count DESC`
+        ORDER BY item_id`
 
     rows, err := s.db.Query(query, lat, lon, radiusKm)
     if err != nil {
@@ -168,7 +189,6 @@ func (s *PostgresRestaurantStore) GetNearbyLocations(lat, lon float64, radiusKm 
         err := rows.Scan(
             &loc.ItemID,
             &loc.ChainID,
-            &loc.CuisineType,
             &loc.PriceRange,
             &loc.Latitude,
             &loc.Longitude,
@@ -177,6 +197,7 @@ func (s *PostgresRestaurantStore) GetNearbyLocations(lat, lon float64, radiusKm 
             &loc.Website,
             &loc.Phone,
             &loc.GooglePlaceID,
+            &loc.GoogleMapsUri,
         )
         if err != nil {
             return nil, fmt.Errorf("failed to scan nearby location row: %v", err)
@@ -191,6 +212,20 @@ func (s *PostgresRestaurantStore) GetNearbyLocations(lat, lon float64, radiusKm 
     return locations, nil
 }
 
+func getPriceLevel(startPrice, endPrice int64) int {
+    avgPrice := (startPrice + endPrice) / 2
+    switch {
+    case avgPrice <= 10:
+        return 1  // Inexpensive
+    case avgPrice <= 30:
+        return 2  // Moderate
+    case avgPrice <= 60:
+        return 3  // Expensive
+    default:
+        return 4  // Very Expensive
+    }
+}
+
 func (s *PostgresRestaurantStore) UpdateLocationFromGooglePlaces(placeID string, data *types.GooglePlacesResponse) error {
     query := `
         UPDATE restaurant_metadata
@@ -201,22 +236,25 @@ func (s *PostgresRestaurantStore) UpdateLocationFromGooglePlaces(placeID string,
             operating_hours = $4,
             website = $5,
             phone = $6,
-            rating = $7,
-            user_ratings_count = $8,
-            price_range = $9
-        WHERE google_place_id = $10`
+            price_range = $7,
+            google_maps_uri = $8
+        WHERE google_place_id = $9`
+
+    priceLevel := getPriceLevel(
+        data.PriceRange.StartPrice.Units,
+        data.PriceRange.EndPrice.Units,
+    )
 
     result, err := s.db.Exec(
         query,
-        data.Geometry.Location.Lat,
-        data.Geometry.Location.Lng,
+        data.Location.Latitude,
+        data.Location.Longitude,
         data.FormattedAddress,
-        data.OpeningHours,
+        data.RegularOpeningHours,
         data.Website,
         data.InternationalPhoneNumber,
-        data.Rating,
-        data.UserRatings,
-        data.PriceLevel,
+        priceLevel,
+        data.GoogleMapsUri,
         placeID,
     )
 

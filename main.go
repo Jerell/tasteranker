@@ -6,7 +6,7 @@ import (
     "net/http"
     "os"
     "path/filepath"
-    "strings"
+    // "strings"
     
     "github.com/Jerell/tasteranker/components"
     "github.com/Jerell/tasteranker/components/views"
@@ -87,16 +87,16 @@ func main() {
     authGroup := e.Group("/auth")
     auth.UseSubroute(authGroup)
     
-    csrfSkipper := func(c echo.Context) bool {
-        return strings.HasPrefix(c.Path(), "/auth")
-    }
+    // csrfSkipper := func(c echo.Context) bool {
+    //     return strings.HasPrefix(c.Path(), "/auth")
+    // }
     
-    e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
-        TokenLookup: "form:_csrf",
-        CookieName:  "csrf_token",
-        CookiePath:  "/",
-        Skipper:     csrfSkipper,
-    }))
+    // e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+    //     TokenLookup: "form:_csrf",
+    //     CookieName:  "csrf_token",
+    //     CookiePath:  "/",
+    //     Skipper:     csrfSkipper,
+    // }))
     
     dbConfig := db.NewConfig()
     database, err := db.NewConnection(dbConfig)
