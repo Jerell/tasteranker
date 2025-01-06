@@ -1,4 +1,11 @@
-DROP TABLE users;
-DROP TABLE items;
-DROP TABLE item_types;
-
+DROP TABLE IF EXISTS matchups;
+DROP TABLE IF EXISTS group_members;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS restaurant_metadata;
+DROP TABLE IF EXISTS restaurant_chains;
+DROP TABLE IF EXISTS auth_providers;
+DROP TABLE IF EXISTS user_profiles;
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS item_types;
+DROP EXTENSION IF EXISTS earthdistance;
+DROP EXTENSION IF EXISTS cube;

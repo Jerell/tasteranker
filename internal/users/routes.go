@@ -7,21 +7,11 @@ import (
     "github.com/Jerell/tasteranker/internal/types"
 )
 
-type Store interface {
-    CreateProfile(profile *types.UserProfile) error
-    GetProfile(userID string) (*types.UserProfile, error)
-    UpdateProfile(profile *types.UserProfile) error
-    GetNearbyUsers(lat, lon float64, radiusKm float64) ([]types.UserProfile, error)
-    CreateGroup(name string, userID int) (int, error)
-    AddGroupMember(groupID int, userID int, searchRadiusMeters int) error
-    GetGroupMembers(groupID int) ([]types.UserProfile, error)
-}
-
 type handler struct {
-    store Store
+    store types.UserStore
 }
 
-func UseSubroute(group *echo.Group, store Store) {
+func UseSubroute(group *echo.Group, store types.UserStore) {
     h := &handler{store: store}
 
     // User profile routes
@@ -43,29 +33,26 @@ func (h *handler) handleCreateProfile(c echo.Context) error {
         return echo.NewHTTPError(http.StatusBadRequest, "Invalid profile data")
     }
 
-    // Validate required fields
-    if profile.UserID == "" {
+    if profile.ID == 0 {
         return echo.NewHTTPError(http.StatusBadRequest, "User ID is required")
     }
 
     if err := h.store.CreateProfile(profile); err != nil {
-        return echo.NewHTTPError(http.StatusInternalServerError, 
-            "Failed to create profile: " + err.Error())
+        return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create profile: " + err.Error())
     }
 
     return c.JSON(http.StatusCreated, profile)
 }
 
 func (h *handler) handleGetProfile(c echo.Context) error {
-    userID := c.Param("id")
-    if userID == "" {
-        return echo.NewHTTPError(http.StatusBadRequest, "User ID is required")
+    userID, err := strconv.Atoi(c.Param("id"))
+    if err != nil {
+        return echo.NewHTTPError(http.StatusBadRequest, "Invalid user ID format")
     }
 
     profile, err := h.store.GetProfile(userID)
     if err != nil {
-        return echo.NewHTTPError(http.StatusInternalServerError, 
-            "Failed to fetch profile: " + err.Error())
+        return echo.NewHTTPError(http.StatusInternalServerError, "Failed to fetch profile: " + err.Error())
     }
     if profile == nil {
         return echo.NewHTTPError(http.StatusNotFound, "Profile not found")
@@ -75,9 +62,9 @@ func (h *handler) handleGetProfile(c echo.Context) error {
 }
 
 func (h *handler) handleUpdateProfile(c echo.Context) error {
-    userID := c.Param("id")
-    if userID == "" {
-        return echo.NewHTTPError(http.StatusBadRequest, "User ID is required")
+    userID, err := strconv.Atoi(c.Param("id"))
+    if err != nil {
+        return echo.NewHTTPError(http.StatusBadRequest, "Invalid user ID format")
     }
 
     profile := new(types.UserProfile)
@@ -85,14 +72,12 @@ func (h *handler) handleUpdateProfile(c echo.Context) error {
         return echo.NewHTTPError(http.StatusBadRequest, "Invalid profile data")
     }
 
-    // Ensure URL parameter matches body
-    if profile.UserID != userID {
+    if profile.ID != userID {
         return echo.NewHTTPError(http.StatusBadRequest, "User ID mismatch")
     }
 
     if err := h.store.UpdateProfile(profile); err != nil {
-        return echo.NewHTTPError(http.StatusInternalServerError, 
-            "Failed to update profile: " + err.Error())
+        return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update profile: " + err.Error())
     }
 
     return c.JSON(http.StatusOK, profile)

@@ -117,7 +117,7 @@ func main() {
     
     // Create API routes group
     api := e.Group("/api")
-    api.Use(auth.RequireAuth)
+    // api.Use(auth.RequireAuth)
     
     // Setup user routes
     userGroup := api.Group("/users")

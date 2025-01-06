@@ -83,8 +83,6 @@ func (s *PostgresRestaurantStore) CreateLocation(metadata *types.RestaurantMetad
         metadata.Website,
         metadata.Phone,
         metadata.GooglePlaceID,
-        metadata.Rating,
-        metadata.UserRatingsCount,
     ).Scan(&metadata.ItemID)
 
     if err != nil {
@@ -125,8 +123,6 @@ func (s *PostgresRestaurantStore) GetLocationsByChainID(chainID int) ([]types.Re
             &loc.Website,
             &loc.Phone,
             &loc.GooglePlaceID,
-            &loc.Rating,
-            &loc.UserRatingsCount,
         )
         if err != nil {
             return nil, fmt.Errorf("failed to scan location row: %v", err)
@@ -181,8 +177,6 @@ func (s *PostgresRestaurantStore) GetNearbyLocations(lat, lon float64, radiusKm 
             &loc.Website,
             &loc.Phone,
             &loc.GooglePlaceID,
-            &loc.Rating,
-            &loc.UserRatingsCount,
         )
         if err != nil {
             return nil, fmt.Errorf("failed to scan nearby location row: %v", err)
