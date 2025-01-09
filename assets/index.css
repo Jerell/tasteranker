@@ -33,6 +33,26 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'ZT Formom';
+    src: url('/assets/fonts/zt-formom/zt-formom.woff2') format('woff2'),
+         url('/assets/fonts/zt-formom/zt-formom.woff') format('woff'),
+         url('/assets/fonts/zt-formom/zt-formom.ttf') format('truetype'),
+         url('/assets/fonts/zt-formom/zt-formom.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ZT Formom';
+    src: url('/assets/fonts/zt-formom/zt-formom-italic.woff2') format('woff2'),
+         url('/assets/fonts/zt-formom/zt-formom-italic.woff') format('woff'),
+         url('/assets/fonts/zt-formom/zt-formom-italic.ttf') format('truetype'),
+         url('/assets/fonts/zt-formom/zt-formom-italic.otf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
+}
+
 h2,
 h3,
 h4,
@@ -44,14 +64,15 @@ h6 {
 }
 
 h1 {
+    font-family: 'ZT Formom';
     font-weight: 900;
-    color: var(--pink);
-    font-size: 1.8rem;
+    color: var(--blue);
+    letter-spacing: -1px;
+    @apply text-3xl;
 }
 
 h2 {
-    font-size: 1.6rem;
-    @apply border-b;
+    @apply border-b text-2xl;
     border-color: var(--cream);
 }
 
@@ -70,8 +91,8 @@ a {
 
     &:hover,
     &:hover h1 {
-        color: var(--blue);
-        text-decoration-color: var(--purple);
+        color: var(--gold);
+        text-decoration-color: var(--gold);
     }
 }
 
@@ -84,9 +105,20 @@ body {
 }
 
 header {
-    @apply flex flex-row justify-between items-center gap-2;
-    background: #fff;
+    @apply flex flex-row justify-between items-center gap-4;
+    background: var(--cream);
     padding: 0 0.125rem;
+
+    --shift: 15px;
+
+    .home {
+        padding-top: var(--shift);
+        margin-bottom: calc(var(--shift) * -1);
+    }
+    nav {
+        position: relative;
+        top: var(--shift);
+    }
 
     .user {
         @apply h-full flex flex-row items-center p-2 w-fit gap-2 whitespace-nowrap;

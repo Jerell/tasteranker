@@ -6,7 +6,7 @@ import (
     "net/http"
     "os"
     "path/filepath"
-    // "strings"
+    "strings"
     
     "github.com/Jerell/tasteranker/components"
     "github.com/Jerell/tasteranker/components/views"
@@ -87,16 +87,16 @@ func main() {
     authGroup := e.Group("/auth")
     auth.UseSubroute(authGroup)
     
-    // csrfSkipper := func(c echo.Context) bool {
-    //     return strings.HasPrefix(c.Path(), "/auth")
-    // }
+    csrfSkipper := func(c echo.Context) bool {
+        return strings.HasPrefix(c.Path(), "/auth")
+    }
     
-    // e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
-    //     TokenLookup: "form:_csrf",
-    //     CookieName:  "csrf_token",
-    //     CookiePath:  "/",
-    //     Skipper:     csrfSkipper,
-    // }))
+    e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+        TokenLookup: "form:_csrf",
+        CookieName:  "csrf_token",
+        CookiePath:  "/",
+        Skipper:     csrfSkipper,
+    }))
     
     dbConfig := db.NewConfig()
     database, err := db.NewConnection(dbConfig)
@@ -161,28 +161,40 @@ func main() {
     e.GET("/about", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK,
-            components.Main(components.About()),
+            components.Main(
+                components.About(),
+                c.Get("csrf").(string),
+            ),
         )
     })
 
     protected.GET("/profile", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK,
-            components.Main(views.Profile()),
+            components.Main(
+                views.Profile(),
+                c.Get("csrf").(string),
+            ),
         )
     })
 
     e.GET("/register", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK,
-            components.Main(views.Registration()),
+            components.Main(
+                views.Registration(),
+                c.Get("csrf").(string),
+            ),
         )
     })
     
     e.GET("/", func(c echo.Context) error {
         return components.Render(
             c, http.StatusOK,
-            components.Main(components.Home()),
+            components.Main(
+                components.Home(),
+                c.Get("csrf").(string),
+            ),
         )
     })
     

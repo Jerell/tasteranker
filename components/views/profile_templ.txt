@@ -1,3 +1,4 @@
-<main><article class=\"profile\"><div class=\"head\"><h2>
- <span class=\"id\">
-</span></h2><p class=\"subheading\">Profile</p></div></article></main>
+<main><article class=\"profile\"><label class=\"block group\"><span class=\"text-xs group-focus-within:text-theme-gold\">Display name</span><div class=\"flex flex-row border-b border-theme-cream group-focus-within:border-theme-gold\">
+</div></label></article></main>
+<input class=\"name block w-full bg-transparent focus:outline-none focus:ring-0 font-semibold text-2xl\" value=\"Jerell\" placeholder=\"
+\">
